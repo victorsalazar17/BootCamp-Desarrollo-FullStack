@@ -13,6 +13,14 @@ const validacionRegistrar = [
 
 ]
 
+const validacionLogin = [
+    body('email')
+        .notEmpty().withMessage('El email no puede estar vacio!'),
+    body('password')
+        .notEmpty().withMessage('La contraseña es obligatoria!')    
+]
+
 module.exports = {
-    validacionRegistrar
+    validacionRegistrar,
+    validacionLogin
 }
