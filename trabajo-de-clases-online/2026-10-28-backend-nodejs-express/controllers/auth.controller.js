@@ -9,7 +9,13 @@ const registrar = async(peticion, respuesta) => {
 
         const { nombre, email, password } = peticion.body
 
-        let user = new User({
+        let user = await User.findOne({ email: email })
+
+        if(user) return respuesta.status(400).json({
+                msg: 'El usuario ya esta registrado en la base de datos'
+            })
+
+        user = new User({
             nombre,
             email,
             password
