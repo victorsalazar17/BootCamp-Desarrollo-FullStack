@@ -1,5 +1,6 @@
 const User = require('./../models/User')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 
 const registrar = async(peticion, respuesta) => {
@@ -57,10 +58,16 @@ const login = async(peticion, respuesta) => {
         if(!passwordCoinciden){
             return respuesta.status(400).json({
                 msg:'La contraseña es incorrecta'
-        })} 
+        })}
+
+        const token = jwt.sign(
+            {  id: user._id },
+            process.env.LLAVE_SECRETA,
+            { expiresIn: '1h' }
+        )  
         
         return respuesta.status(200).json({
-            msg:'Inicio de sesion exitoso'
+            token
         })
         
 
