@@ -3,6 +3,7 @@ const app = express()
 const dotenv = require('dotenv')
 const routerPrueba = require('././routes/prueba.routes')
 const authRouter = require('././routes/auth.routes')
+const tareaRouter = require('././routes/tarea.routes')
 // configuracion de dotenv
 dotenv.config()
 const dbConnection = require('./config/db')
@@ -18,6 +19,7 @@ dbConnection()
 app.use(express.json())
 app.use('/api', routerPrueba)
 app.use('/api', authRouter)
+app.use('/api', tareaRouter)
 
 app.get('/api/pruebas', (peticion, respuesta) => {
     respuesta.json({
