@@ -1,4 +1,5 @@
 const User = require('./../models/User')
+const bcrypt = require('bcrypt')
 
 
 const registrar = async(peticion, respuesta) => {
@@ -12,13 +13,15 @@ const registrar = async(peticion, respuesta) => {
         let user = await User.findOne({ email: email })
 
         if(user) return respuesta.status(400).json({
-                msg: 'El usuario ya esta registrado en la base de datos'
+                msg: `El usuario ${ email } ya esta registrado en la base de datos`
             })
+
+        const passwordEncriptado = await bcrypt.hash(password, 10)
 
         user = new User({
             nombre,
             email,
-            password
+            password: passwordEncriptado
         })
 
         await user.save()
@@ -45,11 +48,13 @@ const login = async(peticion, respuesta) => {
 
         // Return si el usuario no existe
         if(!user) return respuesta.status(404).json({
-            msg: 'El Usuario NO existe en la base de datos'
+            msg: `El Usuario ${ email } NO existe en la base de datos`
         })
 
+        const passwordCoinciden = await bcrypt.compare(password, user.password)
+
         // Validacion de contraseña
-        if(password !== user.password){
+        if(!passwordCoinciden){
             return respuesta.status(400).json({
                 msg:'La contraseña es incorrecta'
         })} 
